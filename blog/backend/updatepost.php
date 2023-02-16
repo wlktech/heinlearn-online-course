@@ -3,6 +3,11 @@
 require "../dbconnect.php";
 require "../QueryBuilder.php";
 
+$categories = select("categories", "*", $conn);
+$id = $_GET['id'];
+$post = selectone("posts", "*", $id, $conn);
+
+
 if($_SERVER["REQUEST_METHOD"]=="POST"){
     $title = $_POST['title'];
     $image_arr = $_FILES['image'];
@@ -23,8 +28,9 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
     $updated_by = 2;
 
 
-    $sql = "INSERT INTO posts(title, image, description, categories_id, posted_date, created_by, updated_by) VALUES(:title, :image, :description, :categories_id, :posted_date, :created_by, :updated_by)";
+    $sql = "UPDATE posts SET title=:title, image=:image, description=:description, categories_id=:categories_id, posted_date=:posted_date, created_by=:created_by, updated_by=:updated_by WHERE id=:id";
     $stmt = $conn->prepare($sql);
+    $stmt->bindParam(":id", $id);
     $stmt->bindParam(":title", $title);
     $stmt->bindParam(":image", $image);
     $stmt->bindParam(":description", $description);
@@ -36,24 +42,37 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 
     header("location: post.php");
 
+    // $datas = [
+    //     "title" => $title,
+    //     "image" => $image,
+    //     "description" => $description,
+    //     "posted_date" => $posted_date,
+    //     "category_id" => $category_id,
+    //     "created_by" => 2,
+    //     "updated_by" => 2,
+    // ];
+    // var_dump($datas);
+
 }else{
 
     include "header.php";
     include "nav.php";
+    
 ?>
 <div id="layoutSidenav_content">
     <main>
         <div class="container-fluid px-3 mt-5">
             <div class="card">
                 <div class="card-header">
-                    <p class="d-inline">Post Create</p>
+                    <p class="d-inline">Post Edit </p>
+                    <?php echo $id; ?>
                     <a href="post.php" class="btn btn-sm btn-danger float-end">Cancle</a>
                 </div>
                 <div class="card-body">
                     <form action="<?php htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label for="title" class="form-label">Post Title</label>
-                            <input type="text" name="title" id="title" class="form-control">
+                            <input type="text" name="title" id="title" class="form-control" value="<?php echo $post['title'] ?>">
                         </div>
                         <div class="mb-3">
                             <label for="image" class="form-label">Post Photo</label>
@@ -61,7 +80,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
                         </div>
                         <div class="mb-3">
                             <label for="description" class="form-label">Description</label>
-                            <textarea name="description" id="description" cols="30" rows="10" class="form-control"></textarea>
+                            <textarea name="description" id="description" cols="30" rows="10" class="form-control"><?php echo $post['description'] ?></textarea>
                         </div>
                         <!-- <div class="mb-3">
                             <label for="posted_date" class="form-label">Posted Date</label>

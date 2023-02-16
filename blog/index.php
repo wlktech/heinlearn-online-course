@@ -24,33 +24,39 @@ $posts = select("posts", "*", $conn);
 <div class="container">
     <div class="row">
         <!-- Blog entries-->
-        <?php
-        foreach($posts as $post) {
-        ?>
         <div class="col-lg-8">
-            <!-- Featured blog post-->
-            
-            <div class="card mb-4">
-                <a href="#!">
-                    <img class="card-img-top" src="https://dummyimage.com/850x350/dee2e6/6c757d.jpg" alt="..." />
-                </a>
-                <div class="card-body">
-                    <div class="small text-muted">
-                        <?php echo $post['posted_date'] ?>
+            <div class="row">
+            <?php
+                foreach($posts as $post) {
+                ?>
+                <div class="col-lg-12">
+                    <!-- Featured blog post-->
+                    <div class="card mb-4">
+                        <a href="#!">
+                            <img class="card-img-top" src="backend/<?php echo $post['image'] ?>"  alt="..." />
+                        </a>
+                        <div class="card-body">
+                            <div class="small text-muted">
+                                <?php echo $post['posted_date'] ?>
+                            </div>
+                                <h2 class="card-title">
+                                    <?php echo $post['title'] ?>
+                                </h2>
+                                <p class="card-text" align="justify">
+                                    <?php 
+                                    echo substr($post["description"], 0,200) 
+                                    ?><
+                                </p>
+                                <a class="btn btn-primary" href="#!">Read more →</a>
+                        </div>
                     </div>
-                        <h2 class="card-title">
-                            <?php echo $post['title'] ?>
-                        </h2>
-                        <p class="card-text" align="justify">
-                            <?php echo $post['description'] ?>
-                        </p>
-                        <a class="btn btn-primary" href="#!">Read more →</a>
                 </div>
+                <?php
+                }
+                ?>
             </div>
         </div>
-        <?php
-        }
-        ?>
+        
         
         <!-- Side widgets-->
         <div class="col-lg-4">
@@ -62,7 +68,7 @@ $posts = select("posts", "*", $conn);
                             <div class="col-sm-6">
                                 <ul class="list-unstyled mb-0">
                                     <?php foreach($categories as $category){ ?>
-                                        <li><a href="#!"><?php echo $category['name'] ?></a></li>
+                                        <li><a href="#!"><?php echo $category['category_name'] ?></a></li>
                                     <?php } ?>
                                 </ul>
                             </div>    
