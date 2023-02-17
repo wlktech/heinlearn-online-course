@@ -45,7 +45,7 @@ $posts = select("posts", "*", $conn);
                                 <p class="card-text" align="justify">
                                     <?php 
                                     echo substr($post["description"], 0,200) 
-                                    ?><
+                                    ?>
                                 </p>
                                 <a class="btn btn-primary" href="#!">Read more →</a>
                         </div>

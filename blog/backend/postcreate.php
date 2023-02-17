@@ -18,23 +18,41 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
         move_uploaded_file($tmp_name, $image);
     }
 
-    $posted_date = date("Y-m-d");
-    $created_by = 2;
-    $updated_by = 2;
+    // $posted_date = date("Y-m-d");
+    // $created_by = 2;
+    // $updated_by = 2;
 
 
-    $sql = "INSERT INTO posts(title, image, description, categories_id, posted_date, created_by, updated_by) VALUES(:title, :image, :description, :categories_id, :posted_date, :created_by, :updated_by)";
-    $stmt = $conn->prepare($sql);
-    $stmt->bindParam(":title", $title);
-    $stmt->bindParam(":image", $image);
-    $stmt->bindParam(":description", $description);
-    $stmt->bindParam(":categories_id", $categories_id);
-    $stmt->bindParam(":posted_date", $posted_date);
-    $stmt->bindParam(":created_by", $created_by);
-    $stmt->bindParam(":updated_by", $updated_by);
-    $stmt->execute();
+    // $sql = "INSERT INTO posts(title, image, description, categories_id, posted_date, created_by, updated_by) VALUES(:title, :image, :description, :categories_id, :posted_date, :created_by, :updated_by)";
+    // $stmt = $conn->prepare($sql);
+    // $stmt->bindParam(":title", $title);
+    // $stmt->bindParam(":image", $image);
+    // $stmt->bindParam(":description", $description);
+    // $stmt->bindParam(":categories_id", $categories_id);
+    // $stmt->bindParam(":posted_date", $posted_date);
+    // $stmt->bindParam(":created_by", $created_by);
+    // $stmt->bindParam(":updated_by", $updated_by);
+    // $stmt->execute();
 
+    // header("location: post.php");
+
+    $datas = [
+        "title" => $title,
+        "image" => $image,
+        "description" => $description,
+        "categories_id" => $categories_id,
+        "posted_date" => date("Y-m-d"),
+        "created_by" => 2,
+        "updated_by" => 2
+    ];
+    // $column_names = implode("," , array_keys($datas));
+    // echo $column_names;
+
+
+
+    store("posts", $datas, $conn);
     header("location: post.php");
+
 
 }else{
 

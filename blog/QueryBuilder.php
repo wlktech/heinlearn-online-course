@@ -1,6 +1,21 @@
 <?php 
 require "dbconnect.php";
 
+
+function store($table, $datas, $conn){
+    $column_names = implode("," , array_keys($datas));
+    $bind_values = implode(", :", array_keys($datas));
+    $sql = "INSERT INTO $table($column_names) VALUES(:$bind_values)";
+
+    $stmt = $conn->prepare($sql);
+    foreach($datas as $key => &$value){
+        $stmt->bindParam(":".$key, $value);
+    }
+    $stmt->execute();
+
+}
+
+
 function select($table, $cols, $conn){
     $sql = 'SELECT '.$cols.' FROM '.$table;
     $stmt = $conn->prepare($sql);
@@ -23,6 +38,10 @@ function selectone($table, $cols, $id, $conn){
     $result = $stmt->fetch();
     return $result;
 }
+
+
+
+
 function delete($table, $id, $conn){
     $sql = 'DELETE FROM '.$table.' WHERE id='.$id;
     $stmt = $conn->prepare($sql);
