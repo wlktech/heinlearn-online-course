@@ -31,6 +31,23 @@ function selectJoin($table1, $cols, $table2, $table1_id, $table2_id, $conn){
     $result = $stmt->fetchAll();
     return $result;
 }
+function selectJoins($table, $cols, $join, $where, $order, $conn){
+    $sql = "SELECT $cols FROM $table";
+    if($join != null){
+        $sql .= " $join";
+    }
+    if($where != null){
+        $sql .= " WHERE $where";
+    }
+    if($order != null){
+        $sql .= " ORDER BY $order";
+    }
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+    $results = $stmt->fetchAll();
+    return $results;
+
+}
 function selectone($table, $cols, $id, $conn){
     $sql = 'SELECT '.$cols.' FROM '.$table.' WHERE id='.$id;
     $stmt = $conn->prepare($sql);

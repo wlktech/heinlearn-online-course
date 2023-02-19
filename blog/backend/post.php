@@ -2,8 +2,12 @@
 include "../dbconnect.php";
 include "../QueryBuilder.php";
 
-$cols = "posts.id,posts.title, posts.image, posts.description,categories.category_name";
-$posts = selectJoin("posts", $cols, "categories", "categories_id", "id", $conn);
+$cols = "posts.*, category_name as c_name, users.name as u_name";
+$join = "INNER JOIN categories on posts.categories_id=categories.id INNER JOIN users on posts.created_by=users.id";
+$where = null;
+$order = "id DESC";
+
+$posts = selectJoins("posts", $cols, $join, $where, $order, $conn);
 if(isset($_POST['id'])){
     $id = $_POST['id'];
     delete("posts", $id, $conn);
@@ -28,13 +32,12 @@ include "nav.php";
                                         <tr>
                                             <th>#</th>
                                             <th>Title</th>
-                                            <th>Photo</th>
-                                            <th>Description</th>
                                             <th>Category</th>
+                                            <th>Created By</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
-                                    <tfoot>
+                                    <!-- <tfoot>
                                         <tr>
                                             <th>Name</th>
                                             <th>Position</th>
@@ -43,18 +46,17 @@ include "nav.php";
                                             <th>Start date</th>
                                             <th>Salary</th>
                                         </tr>
-                                    </tfoot>
+                                    </tfoot> -->
                                     <tbody>
                                         <?php 
                                         $no = 1;
                                         foreach($posts as $post){
                                         ?>
                                         <tr>
-                                            <td><?php echo $no++ ?></td>
-                                            <td><?php echo $post['title'] ?></td>
-                                            <td><img src="<?php echo $post['image'] ?>" width="100px" alt=""></td>
-                                            <td><p align="justify"><?php echo $post['description'] ?></p></td>
-                                            <td><?php echo $post['category_name'] ?></td>
+                                            <td><?= $no++ ?></td>
+                                            <td><?= $post['title'] ?></td>
+                                            <td><?= $post['c_name'] ?></td>
+                                            <td><?= $post['u_name'] ?></td>
                                             <td>
                                                 <a class="btn btn-sm" href="updatepost.php?id=<?php echo $post['id'] ?>"><i class="fas fa-pen-to-square text-success"></i></a>
                                                 
