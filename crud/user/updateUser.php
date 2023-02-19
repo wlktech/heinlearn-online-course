@@ -13,6 +13,7 @@ include "../header.php";
 ?>
     <div class="container mt-5 pt-5">
         <h3 class="text-center">Edit User</h3>
+        
         <form action="../controllers/UserController.php" method="post">
             <div class="mb-3">
                 <label for="name" class="form-label">Name</label>

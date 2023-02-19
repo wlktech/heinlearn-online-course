@@ -4,13 +4,14 @@ include "navbar.php";
 <?php
 require "QueryBuilder.php";
 require "dbconnect.php";
-
+$id = $_GET['id'];
+$categories = select('categories', '*', $conn);
 $cols = "posts.*, category_name as c_name, users.name as u_name";
 $join = "INNER JOIN categories on posts.categories_id=categories.id INNER JOIN users on posts.created_by=users.id";
-$where = null;
-$order = null;
+$where = "categories.id=$id";
+$order = "id DESC";
+
 $posts = selectJoins("posts", $cols, $join, $where, $order, $conn);
-$categories = select('categories', '*', $conn);
 // var_dump($posts);
 
 ?>
@@ -20,8 +21,8 @@ $categories = select('categories', '*', $conn);
 <header class="py-5 bg-light border-bottom mb-4">
     <div class="container">
         <div class="text-center my-5">
-            <h1 class="fw-bolder">Welcome to WLK Blog!</h1>
-            <p class="lead mb-0">Learning is a kind of equipment to face the life battle, Knowledge comes from past.</p>
+            <h1 class="fw-bolder">Search With Category</h1>
+            
         </div>
     </div>
 </header>
@@ -47,7 +48,7 @@ $categories = select('categories', '*', $conn);
                                     echo date('F d, Y', $post_date_str);
                                     
                                 ?>
-                                <a href="category_posts.php?id=<?php echo $post['categories_id'] ?>" class="text-decoration-none">#<?php echo $post['c_name'] ?></a>
+                                <a href="category_posts.php?id=<?php echo $post['categories_id'] ?>" >#<?php echo $post['c_name'] ?></a>
                             </div>
                                 <h2 class="card-title">
                                     <?php echo $post['title'] ?>

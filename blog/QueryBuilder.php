@@ -48,6 +48,21 @@ function selectJoins($table, $cols, $join, $where, $order, $conn){
     return $results;
 
 }
+function show($table, $cols, $join, $id, $conn){
+    $sql = "SELECT $cols FROM $table";
+    if($join != null){
+        $sql .= " $join";
+    }
+    if($id != null){
+        $sql .= " WHERE posts.id= $id";
+    }
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result;
+}
+
+
 function selectone($table, $cols, $id, $conn){
     $sql = 'SELECT '.$cols.' FROM '.$table.' WHERE id='.$id;
     $stmt = $conn->prepare($sql);

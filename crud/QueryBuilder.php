@@ -38,6 +38,23 @@ class QueryBuilder{
     }
 
     //update
+    function selectJoins($table, $cols, $join, $where, $order){
+        $sql = "SELECT $cols FROM $table";
+        if($join != null){
+            $sql .= " $join";
+        }
+        if($where != null){
+            $sql .= " WHERE $where";
+        }
+        if($order != null){
+            $sql .= " ORDER BY $order";
+        }
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $results = $stmt->fetchAll();
+        return $results;
+    
+    }
     public function get($table, $cols, $id){
         $sql = 'SELECT '.$cols.' FROM '.$table.' WHERE id= :id';
         $stmt = $this->conn->prepare($sql);

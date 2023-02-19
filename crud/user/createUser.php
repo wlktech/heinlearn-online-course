@@ -1,8 +1,19 @@
 <?php 
+
+
 include "../header.php";
 ?>
     <div class="container mt-5 pt-5">
         <h3 class="text-center">Create User</h3>
+        <!-- <img src="" alt=""> -->
+        <form action="../controllers/UserController.php" method="POST" enctype="multipart/form-data" class="my-5">
+            <input type="file" name="image" placeholder="image">
+            <input type="hidden" name="action" value="uploadImage">
+            <button class="btn btn-sm btn-primary">Set Profile</button>
+        </form>
+
+        <div class="dropzone-previews"></div>
+
         <form action="../controllers/UserController.php" method="post">
             <div class="mb-3">
                 <label for="name" class="form-label">Name</label>
