@@ -14,15 +14,21 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
     $role = 2;
 
 
-    $sql = "UPDATE users SET name=:name, email=:email, password=:password, role=:role WHERE id=:id";
-    $stmt = $conn->prepare($sql);
-    $stmt->bindParam(":id", $id);
-    $stmt->bindParam(":name", $name);
-    $stmt->bindParam(":email", $email);
-    $stmt->bindParam(":password", $password);
-    $stmt->bindParam(":role", $role);
-    $stmt->execute();
-
+    // $sql = "UPDATE users SET name=:name, email=:email, password=:password, role=:role WHERE id=:id";
+    // $stmt = $conn->prepare($sql);
+    // $stmt->bindParam(":id", $id);
+    // $stmt->bindParam(":name", $name);
+    // $stmt->bindParam(":email", $email);
+    // $stmt->bindParam(":password", $password);
+    // $stmt->bindParam(":role", $role);
+    // $stmt->execute();
+    $datas = [
+        "name" => $name,
+        "email" => $email,
+        "password" => $password,
+        "role" => 2
+    ];
+    update("users", $datas, $id, $conn);
     header("location: user.php");
 
 

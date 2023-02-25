@@ -11,12 +11,16 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
     $category_name = $_POST['category_name'];
 
 
-    $sql = "UPDATE categories SET category_name=:category_name WHERE id = :id";
-    $stmt = $conn->prepare($sql);
-    $stmt->bindParam(":category_name", $category_name);
-    $stmt->bindParam(":id", $id);
-    $stmt->execute();
+    // $sql = "UPDATE categories SET category_name=:category_name WHERE id = :id";
+    // $stmt = $conn->prepare($sql);
+    // $stmt->bindParam(":category_name", $category_name);
+    // $stmt->bindParam(":id", $id);
+    // $stmt->execute();
 
+    $datas = [
+        "category_name" => $category_name,
+    ];
+    update("categories", $datas, $id, $conn);
     header("location: category.php");
 
 

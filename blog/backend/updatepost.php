@@ -5,22 +5,28 @@ require "../QueryBuilder.php";
 
 $categories = select("categories", "*", $conn);
 $id = $_GET['id'];
-$post = selectone("posts", "*", $id, $conn);
+// $post = selectone("posts", "*", $id, $conn);
 
+$post = edit("posts", $id, $conn);
 
 if($_SERVER["REQUEST_METHOD"]=="POST"){
     $title = $_POST['title'];
     $image_arr = $_FILES['image'];
     $categories_id = $_POST['categories_id'];
     $description = $_POST['description'];
-    // echo $title, $category_id, $description;
+    
+    // echo $title, $category_id, $description, "<br>";
+    // echo $_POST['old_photo'];
     // print_r($image_arr);
+    // echo $image_arr['size'];
 
     if(isset($image_arr) && $image_arr['size']>0){
         $dir = "images/";
         $image = $dir.$image_arr['name'];
         $tmp_name = $image_arr['tmp_name'];
         move_uploaded_file($tmp_name, $image);
+    }else{
+        $image = $_POST['old_photo'];
     }
 
     $posted_date = date("Y-m-d");
@@ -28,29 +34,31 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
     $updated_by = 2;
 
 
-    $sql = "UPDATE posts SET title=:title, image=:image, description=:description, categories_id=:categories_id, posted_date=:posted_date, created_by=:created_by, updated_by=:updated_by WHERE id=:id";
-    $stmt = $conn->prepare($sql);
-    $stmt->bindParam(":id", $id);
-    $stmt->bindParam(":title", $title);
-    $stmt->bindParam(":image", $image);
-    $stmt->bindParam(":description", $description);
-    $stmt->bindParam(":categories_id", $categories_id);
-    $stmt->bindParam(":posted_date", $posted_date);
-    $stmt->bindParam(":created_by", $created_by);
-    $stmt->bindParam(":updated_by", $updated_by);
-    $stmt->execute();
+    // $sql = "UPDATE posts SET title=:title, image=:image, description=:description, categories_id=:categories_id, posted_date=:posted_date, created_by=:created_by, updated_by=:updated_by WHERE id=:id";
+    // $stmt = $conn->prepare($sql);
+    // $stmt->bindParam(":id", $id);
+    // $stmt->bindParam(":title", $title);
+    // $stmt->bindParam(":image", $image);
+    // $stmt->bindParam(":description", $description);
+    // $stmt->bindParam(":categories_id", $categories_id);
+    // $stmt->bindParam(":posted_date", $posted_date);
+    // $stmt->bindParam(":created_by", $created_by);
+    // $stmt->bindParam(":updated_by", $updated_by);
+    // $stmt->execute();
 
+    
+
+    $datas = [
+        "title" => $title,
+        "image" => $image,
+        "description" => $description,
+        "categories_id" => $categories_id,
+        "posted_date" => date("Y-m-d"),
+        "created_by" => 2,
+        "updated_by" => 2
+    ];
+    update("posts", $datas, $id, $conn);
     header("location: post.php");
-
-    // $datas = [
-    //     "title" => $title,
-    //     "image" => $image,
-    //     "description" => $description,
-    //     "posted_date" => $posted_date,
-    //     "category_id" => $category_id,
-    //     "created_by" => 2,
-    //     "updated_by" => 2,
-    // ];
     // var_dump($datas);
 
 }else{
@@ -74,9 +82,23 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
                             <label for="title" class="form-label">Post Title</label>
                             <input type="text" name="title" id="title" class="form-control" value="<?php echo $post['title'] ?>">
                         </div>
-                        <div class="mb-3">
-                            <label for="image" class="form-label">Post Photo</label>
-                            <input type="file" name="image" id="image" class="form-control">
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="old_photo-tab" data-bs-toggle="tab" data-bs-target="#old_photo-tab-pane" type="button" role="tab" aria-controls="old_photo-tab-pane" aria-selected="true">Old Photo</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="new_photo-tab" data-bs-toggle="tab" data-bs-target="#new_photo-tab-pane" type="button" role="tab" aria-controls="new_photo-tab-pane" aria-selected="false">New Photo</button>
+                            </li>
+                            
+                        </ul>
+                        <div class="tab-content mb-3" id="myTabContent">
+                            <div class="tab-pane fade show active" id="old_photo-tab-pane" role="tabpanel" aria-labelledby="old_photo-tab" tabindex="0">
+                                <img src="<?= $post['image'] ?>" width="200px" alt="">
+                                <input type="hidden" name="old_photo" value="<?= $post['image'] ?>">
+                            </div>
+                            <div class="tab-pane fade" id="new_photo-tab-pane" role="tabpanel" aria-labelledby="new_photo-tab" tabindex="0">
+                                <input type="file" name="image" id="image" class="form-control">
+                            </div>
                         </div>
                         <div class="mb-3">
                             <label for="description" class="form-label">Description</label>
@@ -92,7 +114,8 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
                                 <option selected>Select Category</option>
                                 <?php $categories = select("categories", "*", $conn);
                                 foreach($categories as $category){ ?>
-                                <option value="<?php echo $category['id'] ?>"><?php echo $category['category_name'] ?></option>
+                                <option value="<?php echo $category['id'] ?>" <?php if($post['categories_id'] == $category['id']){
+                                        echo "selected"; } ?>><?php echo $category['category_name']; ?></option>
                                 <?php } ?>
                             </select>
                         </div>

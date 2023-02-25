@@ -71,6 +71,47 @@ function selectone($table, $cols, $id, $conn){
     return $result;
 }
 
+function edit($table, $id, $conn){
+    $sql = "SELECT * FROM $table WHERE id=:id";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(":id", $id);
+    $stmt->execute();
+    $result = $stmt->fetch();
+    return $result;
+}
+
+//sayar hein
+// function update($table, $datas, $id, $conn){
+//     $col_set = [];
+//     foreach($datas as $key=>$value){
+//         $col_set[] = "$key = :$key";
+//     }
+//     $col_bindData = implode(",", $col_set);
+//     $sql = "UPDATE $table SET $col_bindData WHERE id = :id";
+//     $stmt = $conn->prepare($sql);
+//     foreach($datas as $key => &$value){
+//         $stmt->bindParam(":".$key, $value);
+//     }
+//     $stmt->bindParam(":id", $id);
+//     $stmt->execute();
+// }
+
+//update by WLK
+function update($table, $datas, $id, $conn){
+    $edits = "";
+    foreach($datas as $key=>$value){ 
+        $edits .= "$key=:$key,"; 
+    }
+    $edits = rtrim($edits, ',');
+    $sql = "UPDATE $table SET $edits WHERE id=:id";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(":id", $id);
+    foreach($datas as $key => &$value){
+        $stmt->bindParam(":".$key, $value);
+    }
+    $stmt->execute();
+    return true;
+}
 
 
 
