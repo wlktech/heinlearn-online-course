@@ -121,4 +121,22 @@ function delete($table, $id, $conn){
     $stmt->execute();
     return true;
 }
+
+function login($table, $email, $password, $conn){
+    $sql = "SELECT * FROM $table WHERE email=:email";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(":email", $email);
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    if(!empty($result)){
+        if($result['password']==$password){
+            return $result;
+        }else{
+            return false;
+        }
+    }else{
+        return false;
+    }
+}
+
 ?>
